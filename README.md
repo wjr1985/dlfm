@@ -29,7 +29,7 @@ If you are using the desktop app:
 - Press **Ctrl+Shift+I**
 - Click the "*Application*" tab
 - Click and expand the "*Local Storage*" section
-- Click on the only entry in this section, "*https://discordapp.com*"
+- Click on the only entry in this section, "*https://discord.com*"
 - Press **F5**
 - Wait few seconds
 - Right click -> Edit Value in the field to the right of "*token*"
