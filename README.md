@@ -42,7 +42,7 @@ If you are using Discord in a browser:
 - Press **F12**
 - Click the "*Storage*" tab
 - Click and expand the "*Local Storage*" section
-- Click on the only entry, "*https://discordapp.com*"
+- Click on the only entry, "*https://discord.com*"
 - Copy the value beside the "*token*" entry and paste it into your config file without the quotation marks.
 
 ![Browser Token](https://i.imgur.com/OFrhTHE.png)
