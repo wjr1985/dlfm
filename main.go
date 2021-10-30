@@ -12,11 +12,6 @@ import (
 	"github.com/shkh/lastfm-go/lastfm"
 )
 
-// Print prints tracks
-func Print(text string) {
-	log.Println(" - ", text)
-}
-
 func scrobbler() error {
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
@@ -38,34 +33,27 @@ func scrobbler() error {
 
 	api := lastfm.New(apiKey, "")
 
-	Print("Settings loaded: config.ini")
+	log.Println("Settings loaded: config.ini")
 
 	if endlessMode {
-		Print("Endless mode! Ctrl+C to exit")
+		log.Println("Endless mode! Ctrl+C to exit")
 	}
 	dg, err := discordgo.New(token)
 	if err != nil {
 		log.Println("Discord error: ", err)
 		return err
 	}
-	Print("Authorized to Discord")
+	log.Println("Authorized to Discord")
 	if err := dg.Open(); err != nil {
 		log.Println("Discord error: ", err)
 		return err
 	}
-	Print("Connected to Discord")
+	defer dg.Close()
+	log.Println("Connected to Discord")
 
 	interval := time.Duration(configInterval*1000) * time.Millisecond
 	ticker := time.NewTicker(interval)
 	var prevTrack = ""
-
-	defer func() {
-		defer dg.UpdateStatusComplex(discordgo.UpdateStatusData{
-			Game:   nil,
-			Status: "offline",
-		})
-		dg.Close()
-	}()
 
 	for {
 		select {
@@ -96,7 +84,7 @@ func scrobbler() error {
 								return err
 							}
 						}
-						Print("Now playing: " + trackName)
+						log.Println("Now playing: " + trackName)
 					} else if !isNowPlaying {
 						log.Println("!")
 						statusData := discordgo.UpdateStatusData{
@@ -117,7 +105,7 @@ func scrobbler() error {
 }
 
 func main() {
-	_ = scrobbler()
+	scrobbler()
 	log.Println("Press the Enter Key to terminate the console screen!")
-	_, _ = fmt.Scanln()
+	fmt.Scanln()
 }
