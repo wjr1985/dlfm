@@ -86,7 +86,6 @@ func scrobbler() error {
 							prevTrack = trackName
 						}
 					} else if !isNowPlaying {
-						log.Println("!")
 						statusData := discordgo.UpdateStatusData{
 							Game:   nil,
 							Status: "offline",
