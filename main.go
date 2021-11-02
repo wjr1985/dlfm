@@ -1,4 +1,3 @@
-// DiscordLastfmScrobbler project main.go
 package main
 
 import (
@@ -24,7 +23,7 @@ func scrobbler() error {
 	username := cfg.Section("lastfm").Key("username").String()
 	title := cfg.Section("app").Key("title").String()
 	endlessMode, err := strconv.ParseBool(cfg.Section("app").Key("endless_mode").String())
-	configInterval, err := cfg.Section("lastfm").Key("interval").Int()
+	configInterval, err := cfg.Section("lastfm").Key("check_interval").Int()
 
 	if err != nil {
 		log.Println(err)
@@ -53,8 +52,7 @@ func scrobbler() error {
 
 	interval := time.Duration(configInterval*1000) * time.Millisecond
 	ticker := time.NewTicker(interval)
-	var prevTrack = ""
-
+	var prevTrack string
 	for {
 		select {
 		case <-ticker.C:
@@ -66,14 +64,13 @@ func scrobbler() error {
 					currentTrack := result.Tracks[0]
 					isNowPlaying, _ := strconv.ParseBool(currentTrack.NowPlaying)
 					trackName := currentTrack.Artist.Name + " - " + currentTrack.Name
-					if isNowPlaying && prevTrack != trackName {
-						prevTrack = trackName
+					if isNowPlaying {
 						statusData := discordgo.UpdateStatusData{
 							Game: &discordgo.Game{
 								Name:    title,
 								Type:    discordgo.GameTypeListening,
-								Details: prevTrack,
-								State:   "DiscordLastfmScrobbler",
+								Details: currentTrack.Name,
+								State:   currentTrack.Artist.Name,
 							},
 							AFK:    false,
 							Status: "online",
@@ -84,7 +81,10 @@ func scrobbler() error {
 								return err
 							}
 						}
-						log.Println("Now playing: " + trackName)
+						if prevTrack != trackName {
+							log.Println("Now playing: " + trackName)
+							prevTrack = trackName
+						}
 					} else if !isNowPlaying {
 						log.Println("!")
 						statusData := discordgo.UpdateStatusData{
