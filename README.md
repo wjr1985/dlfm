@@ -26,9 +26,9 @@ After clicking Submit you should get a confirmation page with two items: *API Ke
 
 Copy and paste the API Key value into the config file in the `api_key = xxx` line
 
-Then, feel field `username` with your last.fm username
+Then, fill field `username` with your last.fm username
 
-Also you should feel field `check_interval` with integer number of seconds script should check new tracks. Recomended values: 1-5 seconds (if you are listening to grindcore, write 0)
+Also you should fill field `check_interval` with integer number of seconds script should check new tracks. Recomended values: 1-5 seconds (if you are listening to grindcore, write 0)
 
 ## **2. Discord User Token**
 
@@ -65,7 +65,7 @@ List of tags:
 | {{album}}   | Track's album name        |
 | {{name}}    | Track name                |
 
-Also if you want to ignore not critic errors, change "*endless_mode*" to "true", else feel it with "false"
+Also if you want to ignore not critic errors, change "*endless_mode*" to "true", else fill it with "false"
 
 ## When you're done
 
