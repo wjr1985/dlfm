@@ -1,0 +1,22 @@
+# If you want to know how to fill out config correctly, read README.md
+
+[lastfm]
+api_key = "yourApiKey"
+username = "username"
+check_interval = 5
+
+[discord]
+# use_app_mode value must be without quotes
+use_app_mode = true
+token = "discordtoken"
+# app_id value must be without quotes
+app_id = 0123456789101112
+
+[app]
+title = "last.fm"
+large_image = "{{album_image}}"                      # album cover on last.fm
+large_text = "{{album}}"                             # album name
+small_image = "{{lastfm}}"                           # last.fm icon. full list of icons tags is in README
+small_text = "github.com/dikey0ficial/dlfm"
+# endless_mode value must be without quotes
+endless_mode = true
