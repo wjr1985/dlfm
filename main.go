@@ -250,7 +250,7 @@ func main() {
 	var (
 		prevTrack string
 	)
-
+BIGFOR:
 	for {
 		select {
 		case <-ticker.C:
@@ -269,6 +269,10 @@ func main() {
 					trackName := ctrack.Artist.Name + " - " + ctrack.Name
 					if isNowPlaying {
 						if err := set(dg, result); err != nil {
+							if err.Error() == "The pipe is being closed." {
+								log.Println("Error: discord disconnected =(")
+								break BIGFOR
+							}
 							log.Println("Discord error: ", err)
 							if !conf.App.EndlessMode {
 								end(nil)
@@ -292,4 +296,5 @@ func main() {
 			}
 		}
 	}
+	end(nil)
 }
