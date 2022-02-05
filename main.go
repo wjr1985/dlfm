@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	dgo "github.com/bwmarrin/discordgo"
-	rgo "github.com/hugolgst/rich-go/client"
+	rgo "github.com/dikey0ficial/rich-go/client" // my fork with some fixes
 	"github.com/shkh/lastfm-go/lastfm"
 	"io"
 	"io/ioutil"
