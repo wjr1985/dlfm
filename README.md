@@ -25,11 +25,12 @@ Screenshot from list of users:
 
 Profile screenshot:
 
-![Profile screenshot](https://i.imgur.com/shI5JJT.png "Profile screenshot")
+![Profile screenshot](https://i.imgur.com/Pfq1qth.png "Profile screenshot")
 
 Screenshot from list of users:
 
 ![Screenshot from list of users](https://i.imgur.com/F5E1GPz.png "Screenshot from list of users")
+
 </details>
 
 Config file (config.toml) have three parts: last.fm, discord and application settings.
@@ -130,11 +131,15 @@ For small image you can use other tags — they will be changed with icon of ser
 | {{yandex}}      | ![](https://download.cdn.yandex.net/from/yandex.ru/support/ru/music/files/icon_main.png)             |
 | {{soundcloud}}  | ![](https://icons.iconarchive.com/icons/sicons/basic-round-social/512/soundcloud-icon.png)           |
 
-*icons aren't mine, i just tooked their URLs*
 </details>
 
+*icons aren't mine, i just tooked their URLs*
 
-You can also fill `large_image` and `small_image` with your own URLs to any picture
+You can also fill `large_image` and `small_image` with your own URLs to any picture.
+
+Using `show_button` property, you can set visibility button with link to track you scrobbling on last.fm; `true` to show, `false` to hide.
+
+*in some clients button may be visible, but not clickable*
 
 
 ## When you're done

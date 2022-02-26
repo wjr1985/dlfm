@@ -34,6 +34,7 @@ var conf = struct {
 		LargeText   string `toml:"large_text"`
 		SmallImage  string `toml:"small_image"`
 		SmallText   string `toml:"small_text"`
+		ShowButton  bool   `toml:"show_button"`
 		EndlessMode bool   `toml:"endless_mode"`
 	} `toml:"app"`
 }{}
@@ -139,7 +140,8 @@ func tokenClear(dg *dgo.Session) error {
 type lrt = lastfm.UserGetRecentTracks
 
 func appClear(_ *dgo.Session) error {
-	return rgo.SetActivity(rgo.Activity{})
+	rgo.Logout()
+	return nil
 }
 
 func tokenSet(dg *dgo.Session, r lrt) error {
@@ -161,6 +163,10 @@ func tokenSet(dg *dgo.Session, r lrt) error {
 }
 
 func appSet(_ *dgo.Session, r lrt) error {
+	err := rgo.Login(strconv.Itoa(conf.Discord.AppID))
+	if err != nil {
+		return err
+	}
 	ctrack := r.Tracks[0]
 	fltext, fstext := conf.App.LargeText,
 		conf.App.SmallText
@@ -171,6 +177,13 @@ func appSet(_ *dgo.Session, r lrt) error {
 	}
 	flimg := conf.App.LargeImage
 	flimg = strings.Replace(flimg, "{{album_image}}", ctrack.Images[3].Url, -1)
+	var bs = make([]*rgo.Button, 0)
+	if conf.App.ShowButton {
+		bs = []*rgo.Button{&rgo.Button{
+			Label: "This track on last.fm",
+			URL:   ctrack.Url,
+		}}
+	}
 	return rgo.SetActivity(
 		rgo.Activity{
 			Details:    ctrack.Name,
@@ -179,6 +192,7 @@ func appSet(_ *dgo.Session, r lrt) error {
 			LargeText:  fltext,
 			SmallImage: conf.App.SmallImage,
 			SmallText:  fstext,
+			Buttons:    bs,
 		},
 	)
 }

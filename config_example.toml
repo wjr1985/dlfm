@@ -18,5 +18,9 @@ large_image = "{{album_image}}"                      # album cover on last.fm
 large_text = "{{album}}"                             # album name
 small_image = "{{lastfm}}"                           # last.fm icon. full list of icons tags is in README
 small_text = "github.com/dikey0ficial/dlfm"
+# show_button must be without quotes
+# may don't work in some discord clients
+show_button = true
+
 # endless_mode value must be without quotes
 endless_mode = true
