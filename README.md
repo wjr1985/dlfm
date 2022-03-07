@@ -6,7 +6,7 @@
 You can download a compiled version from [releases pages](https://github.com/dikey0ficial/dlfm/releases)
 
 If you have go installed, you can only write this in console:
-`go install github.com/dikey0ficia/dlfm`
+`go install github.com/dikey0ficial/dlfm`
 
 </details>
 
