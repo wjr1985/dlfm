@@ -10,8 +10,8 @@ Just go to [releases pages](https://github.com/dikey0ficial/dlfm/releases), choo
 ### Building from source
 
 1. Install requirements:
-  1. Go 1.16 or newer;
-  2. Git (to clone repo).
+  1) Go 1.16 or newer;
+  2) Git (to clone repo).
 
 2. Clone repository (`git clone https://github.com/dikey0ficial/dlfm.git`) and get in its directory
 3. Just make `go build .` (or `go install .` to get binary in `$GOPATH/bin`)
