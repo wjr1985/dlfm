@@ -3,12 +3,19 @@
 
 <details><summary><b>How to install</b></summary>
 
-You can download a compiled version from [releases pages](https://github.com/dikey0ficial/dlfm/releases)
+### Download compiled version (recommended):
 
-If you have go installed, you can only write this in console:
-`go install github.com/dikey0ficial/dlfm/v4@latest`
-or
-`go install github.com/dikey0ficial/dlfm@latest`
+Just go to [releases pages](https://github.com/dikey0ficial/dlfm/releases), choose binary and download it. All binaries are portable.
+
+### Building from source
+
+1. Install requirements:
+  1. Go 1.16 or newer;
+  2. Git (to clone repo).
+
+2. Clone repository (`git clone https://github.com/dikey0ficial/dlfm.git`) and get in its directory
+3. Just make `go build .` (or `go install .` to get binary in `$GOPATH/bin`)
+
 
 </details>
 
@@ -135,7 +142,7 @@ For small image you can use other tags — they will be changed with icon of ser
 
 </details>
 
-*icons aren't mine, i just tooked their URLs*
+*icons aren't mine, i just took their URLs*
 
 You can also fill `large_image` and `small_image` with your own URLs to any picture.
 
