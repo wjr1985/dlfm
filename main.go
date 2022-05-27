@@ -8,10 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/signal"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -157,28 +155,9 @@ func main() {
 		end(err)
 		os.Exit(1)
 	}
+
+	defer func() { updater.Logout() }()
 	log.Println("Authorized and connected to discord")
-
-	var deathChan = make(chan os.Signal, 0)
-	signal.Notify(deathChan, os.Interrupt, syscall.SIGTERM)
-
-	go func(deathChan chan os.Signal) {
-		<-deathChan
-		if err := updater.Clear(); err != nil {
-			log.Println("Error during deleting status:", err)
-			end(nil)
-			os.Exit(1)
-		}
-		log.Println("Deleting status... (press Ctrl+C again to permament stop)")
-		go func(dchan chan os.Signal) {
-			<-dchan
-			os.Exit(0)
-		}(deathChan)
-		time.Sleep(5 * time.Second)
-		log.Println("Deleted status!")
-		end(nil)
-		os.Exit(0)
-	}(deathChan)
 
 	interval := time.Duration(conf.LastFm.CheckInterval) * time.Second
 	ticker := time.NewTicker(interval)

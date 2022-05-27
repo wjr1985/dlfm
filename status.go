@@ -11,6 +11,7 @@ type RT = lastfm.UserGetRecentTracks
 
 type StatusUpdater interface {
 	Login(string) error
+	Logout() error
 	Set(RT) error
 	Clear() error
 }
@@ -19,6 +20,11 @@ type AppStatusUpdater struct{}
 
 func (AppStatusUpdater) Login(id string) error {
 	return rgo.Login(id)
+}
+
+func (AppStatusUpdater) Logout() error {
+	rgo.Logout()
+	return nil
 }
 
 func (AppStatusUpdater) Set(t RT) error {
@@ -53,12 +59,15 @@ func (AppStatusUpdater) Set(t RT) error {
 }
 
 func (AppStatusUpdater) Clear() error {
-	// rgo.Logout()
 	return nil
 }
 
 type TokenModeStatusUpdater struct {
 	Session dgo.Session
+}
+
+func (tmsu TokenModeStatusUpdater) Logout() error {
+	return tmsu.Session.Close()
 }
 
 func (tmsu TokenModeStatusUpdater) Login(token string) error {
