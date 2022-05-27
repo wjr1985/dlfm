@@ -26,6 +26,8 @@ var conf = struct {
 	} `toml:"discord"`
 	App struct {
 		Title       string `toml:"title"`
+		FirstLine   string `toml:"first_line"`
+		SecondLine  string `toml:"second_line"`
 		LargeImage  string `toml:"large_image"`
 		LargeText   string `toml:"large_text"`
 		SmallImage  string `toml:"small_image"`
@@ -90,6 +92,13 @@ func init() {
 	}
 	if conf.App.Title == "" {
 		conf.App.Title = "last.fm"
+	}
+
+	if conf.App.FirstLine == "" {
+		conf.App.FirstLine = "{{name}}"
+	}
+	if conf.App.SecondLine == "" {
+		conf.App.SecondLine = "{{artist}}"
 	}
 	if conf.App.LargeImage == "" {
 		conf.App.LargeImage = "{{album_image}}"

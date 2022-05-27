@@ -112,9 +112,9 @@ Next step is different in App mode and Token mode, so I placed it in spoiler
 If you want to ignore not critic errors, change "*endless_mode*" to `true`, else fill it with `false`. **Without quotes**!
 
 Now you can modify Title in Token mode and Large image, Large text (what you'll see if you cover large image),
-Small image and Small text (what you'll se if you cover small image) in App mode
+Small image and Small text (what you'll see if you cover small image) in App mode. In both modes you can customize first and second lines.
 
-In title, large image, large text, small text you can use these tags — parts of text that will be changed.
+In title, first line, second line, large image, large text, small text you can use these tags — parts of text that will be changed.
 List of tags:
 
 | Tag             |                     Value |    Type    |

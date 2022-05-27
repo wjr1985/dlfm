@@ -7,6 +7,15 @@ import (
 	"strings"
 )
 
+func replaceTags(original string, name, artist, album, albumCoverURL string) string {
+	var result string
+	result = strings.Replace(original, "{{name}}", name, -1)
+	result = strings.Replace(result, "{{artist}}", artist, -1)
+	result = strings.Replace(result, "{{album}}", album, -1)
+	result = strings.Replace(result, "{{album_image}}", albumCoverURL, -1)
+	return result
+}
+
 type RT = lastfm.UserGetRecentTracks
 
 type StatusUpdater interface {
@@ -29,15 +38,12 @@ func (AppStatusUpdater) Logout() error {
 
 func (AppStatusUpdater) Set(t RT) error {
 	ctrack := t.Tracks[0]
-	fltext, fstext := conf.App.LargeText,
-		conf.App.SmallText
-	for _, v := range []*string{&fltext, &fstext} {
-		*v = strings.Replace(*v, "{{name}}", ctrack.Name, -1)
-		*v = strings.Replace(*v, "{{artist}}", ctrack.Artist.Name, -1)
-		*v = strings.Replace(*v, "{{album}}", ctrack.Album.Name, -1)
-	}
+	ffirstl, fsecline := conf.App.FirstLine, conf.App.SecondLine
+	fltext, fstext := conf.App.LargeText, conf.App.SmallText
 	flimg := conf.App.LargeImage
-	flimg = strings.Replace(flimg, "{{album_image}}", ctrack.Images[3].Url, -1)
+	for _, v := range []*string{&fltext, &fstext, &ffirstl, &fsecline, &flimg} {
+		*v = replaceTags(*v, ctrack.Name, ctrack.Artist.Name, ctrack.Album.Name, ctrack.Images[3].Url)
+	}
 	var bs = make([]*rgo.Button, 0)
 	if conf.App.ShowButton {
 		bs = []*rgo.Button{&rgo.Button{
@@ -47,8 +53,8 @@ func (AppStatusUpdater) Set(t RT) error {
 	}
 	return rgo.SetActivity(
 		rgo.Activity{
-			Details:    ctrack.Name,
-			State:      ctrack.Artist.Name,
+			Details:    ffirstl,
+			State:      fsecline,
 			LargeImage: flimg,
 			LargeText:  fltext,
 			SmallImage: conf.App.SmallImage,
@@ -83,16 +89,17 @@ func (tmsu TokenModeStatusUpdater) Login(token string) error {
 func (tmsu TokenModeStatusUpdater) Set(t RT) error {
 	ctrack := t.Tracks[0]
 	ftitle := conf.App.Title
-	ftitle = strings.Replace(ftitle, "{{name}}", ctrack.Name, -1)
-	ftitle = strings.Replace(ftitle, "{{artist}}", ctrack.Artist.Name, -1)
-	ftitle = strings.Replace(ftitle, "{{album}}", ctrack.Album.Name, -1)
+	ffirstl, fsecline := conf.App.FirstLine, conf.App.SecondLine
+	for _, v := range []*string{&ftitle, &ffirstl, &fsecline} {
+		*v = replaceTags(*v, ctrack.Name, ctrack.Artist.Name, ctrack.Album.Name, ctrack.Images[3].Url)
+	}
 	return tmsu.Session.UpdateStatusComplex(
 		dgo.UpdateStatusData{
 			Game: &dgo.Game{
 				Name:    ftitle,
 				Type:    2,
-				Details: ctrack.Name,
-				State:   ctrack.Artist.Name,
+				Details: ffirstl,
+				State:   fsecline,
 			},
 		},
 	)

@@ -14,6 +14,8 @@ app_id = 0123456789101112
 
 [app]
 title = "last.fm"
+first_line = "{{name}} from {{album}}"
+second_line = "by {{artist}}"
 large_image = "{{album_image}}"                      # album cover on last.fm
 large_text = "{{album}}"                             # album name
 small_image = "{{lastfm}}"                           # last.fm icon. full list of icons tags is in README
