@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
-	dgo "github.com/bwmarrin/discordgo"
-	rgo "github.com/dikey0ficial/rich-go/v2/client" // my fork with some fixes
 	"github.com/shkh/lastfm-go/lastfm"
 	"io"
 	"io/ioutil"
@@ -129,72 +127,8 @@ func end(err error) {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println("Press any key to close window...")
+	fmt.Println("Press enter to close window...")
 	fmt.Scanln()
-}
-
-func tokenClear(dg *dgo.Session) error {
-	return dg.UpdateStatusComplex(dgo.UpdateStatusData{Game: nil})
-}
-
-type lrt = lastfm.UserGetRecentTracks
-
-func appClear(_ *dgo.Session) error {
-	rgo.Logout()
-	return nil
-}
-
-func tokenSet(dg *dgo.Session, r lrt) error {
-	ctrack := r.Tracks[0]
-	ftitle := conf.App.Title
-	ftitle = strings.Replace(ftitle, "{{name}}", ctrack.Name, -1)
-	ftitle = strings.Replace(ftitle, "{{artist}}", ctrack.Artist.Name, -1)
-	ftitle = strings.Replace(ftitle, "{{album}}", ctrack.Album.Name, -1)
-	return dg.UpdateStatusComplex(
-		dgo.UpdateStatusData{
-			Game: &dgo.Game{
-				Name:    ftitle,
-				Type:    2,
-				Details: ctrack.Name,
-				State:   ctrack.Artist.Name,
-			},
-		},
-	)
-}
-
-func appSet(_ *dgo.Session, r lrt) error {
-	err := rgo.Login(strconv.Itoa(conf.Discord.AppID))
-	if err != nil {
-		return err
-	}
-	ctrack := r.Tracks[0]
-	fltext, fstext := conf.App.LargeText,
-		conf.App.SmallText
-	for _, v := range []*string{&fltext, &fstext} { // texts
-		*v = strings.Replace(*v, "{{name}}", ctrack.Name, -1)
-		*v = strings.Replace(*v, "{{artist}}", ctrack.Artist.Name, -1)
-		*v = strings.Replace(*v, "{{album}}", ctrack.Album.Name, -1)
-	}
-	flimg := conf.App.LargeImage
-	flimg = strings.Replace(flimg, "{{album_image}}", ctrack.Images[3].Url, -1)
-	var bs = make([]*rgo.Button, 0)
-	if conf.App.ShowButton {
-		bs = []*rgo.Button{&rgo.Button{
-			Label: "This track on last.fm",
-			URL:   ctrack.Url,
-		}}
-	}
-	return rgo.SetActivity(
-		rgo.Activity{
-			Details:    ctrack.Name,
-			State:      ctrack.Artist.Name,
-			LargeImage: flimg,
-			LargeText:  fltext,
-			SmallImage: conf.App.SmallImage,
-			SmallText:  fstext,
-			Buttons:    bs,
-		},
-	)
 }
 
 func main() {
@@ -205,47 +139,35 @@ func main() {
 	if conf.App.EndlessMode {
 		log.Println("Endless mode! Press `Ctrl+C` to exit")
 	}
+
 	var (
-		dg  *dgo.Session
-		err error
+		indentificator string
+		updater        StatusUpdater
 	)
+
 	if conf.Discord.UseAppMode {
-		if err = rgo.Login(strconv.Itoa(conf.Discord.AppID)); err != nil {
-			end(err)
-			return
-		}
-		defer rgo.Logout()
+		updater = AppStatusUpdater{}
+		indentificator = strconv.Itoa(conf.Discord.AppID)
 	} else {
-		if dg, err = dgo.New(conf.Discord.Token); err != nil {
-			end(err)
-			return
-		} else if err = dg.Open(); err != nil {
-			end(err)
-			return
-		}
-		defer dg.Close()
+		updater = TokenModeStatusUpdater{}
+		indentificator = conf.Discord.Token
 	}
 
+	if err := updater.Login(indentificator); err != nil {
+		end(err)
+		os.Exit(1)
+	}
 	log.Println("Authorized and connected to discord")
-
-	var set, clear = func() (
-		func(*dgo.Session, lrt) error,
-		func(*dgo.Session) error) {
-		if conf.Discord.UseAppMode {
-			return appSet, appClear
-		}
-		return tokenSet, tokenClear
-	}()
 
 	var deathChan = make(chan os.Signal, 0)
 	signal.Notify(deathChan, os.Interrupt, syscall.SIGTERM)
 
 	go func(deathChan chan os.Signal) {
 		<-deathChan
-		if err := clear(dg); err != nil {
+		if err := updater.Clear(); err != nil {
 			log.Println("Error during deleting status:", err)
 			end(nil)
-			return
+			os.Exit(1)
 		}
 		log.Println("Deleting status... (press Ctrl+C again to permament stop)")
 		go func(dchan chan os.Signal) {
@@ -282,7 +204,7 @@ BIGFOR:
 					isNowPlaying, _ := strconv.ParseBool(ctrack.NowPlaying)
 					trackName := ctrack.Artist.Name + " - " + ctrack.Name
 					if isNowPlaying {
-						if err := set(dg, result); err != nil {
+						if err := updater.Set(result); err != nil {
 							if err.Error() == "The pipe is being closed." {
 								log.Println("Error: discord disconnected =(")
 								break BIGFOR
@@ -298,7 +220,7 @@ BIGFOR:
 							prevTrack = trackName
 						}
 					} else if !isNowPlaying {
-						if err := clear(dg); err != nil {
+						if err := updater.Clear(); err != nil {
 							log.Println("Discord error: ", err)
 							if !conf.App.EndlessMode {
 								end(nil)
