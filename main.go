@@ -156,7 +156,7 @@ func main() {
 		updater = AppStatusUpdater{}
 		indentificator = strconv.Itoa(conf.Discord.AppID)
 	} else {
-		updater = TokenModeStatusUpdater{}
+		updater = &TokenModeStatusUpdater{}
 		indentificator = conf.Discord.Token
 	}
 

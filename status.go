@@ -69,29 +69,38 @@ func (AppStatusUpdater) Clear() error {
 }
 
 type TokenModeStatusUpdater struct {
-	Session dgo.Session
+	Session *dgo.Session
 }
 
-func (tmsu TokenModeStatusUpdater) Logout() error {
-	return tmsu.Session.Close()
-}
-
-func (tmsu TokenModeStatusUpdater) Login(token string) error {
+func (tmsu *TokenModeStatusUpdater) Login(token string) error {
 	dg, err := dgo.New(conf.Discord.Token)
 	if err != nil {
 		return err
 	}
-	tmsu.Session = *dg
-	err = tmsu.Session.Open()
-	return err
+	err = dg.Open()
+	if err != nil {
+		return err
+	}
+	tmsu.Session = dg
+	return nil
 }
 
-func (tmsu TokenModeStatusUpdater) Set(t RT) error {
+func (tmsu *TokenModeStatusUpdater) Logout() error {
+	if tmsu.Session == nil {
+		return ErrNilDGoSession
+	}
+	return tmsu.Session.Close()
+}
+
+func (tmsu *TokenModeStatusUpdater) Set(t RT) error {
 	ctrack := t.Tracks[0]
 	ftitle := conf.App.Title
 	ffirstl, fsecline := conf.App.FirstLine, conf.App.SecondLine
 	for _, v := range []*string{&ftitle, &ffirstl, &fsecline} {
 		*v = replaceTags(*v, ctrack.Name, ctrack.Artist.Name, ctrack.Album.Name, ctrack.Images[3].Url)
+	}
+	if tmsu.Session == nil {
+		return ErrNilDGoSession
 	}
 	return tmsu.Session.UpdateStatusComplex(
 		dgo.UpdateStatusData{
@@ -105,6 +114,9 @@ func (tmsu TokenModeStatusUpdater) Set(t RT) error {
 	)
 }
 
-func (tmsu TokenModeStatusUpdater) Clear() error {
+func (tmsu *TokenModeStatusUpdater) Clear() error {
+	if tmsu.Session == nil {
+		return ErrNilDGoSession
+	}
 	return tmsu.Session.UpdateStatusComplex(dgo.UpdateStatusData{Game: nil})
 }
