@@ -1,4 +1,6 @@
 # dlfm
+
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language: Go](https://img.shields.io/static/v1?message=Go&labelColor=5c5c5c&color=00ADD8&label=Language "Go")](https://go.dev/ "Go")
 ## This app will update your Discord status with information about song that you scrobble now
 
 <details><summary><b>How to install</b></summary>
