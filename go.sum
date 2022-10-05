@@ -6,6 +6,10 @@ github.com/dikey0ficial/rich-go/v2 v2.1.2-0.20220428194950-c836a7fe4d3b h1:Co9ir
 github.com/dikey0ficial/rich-go/v2 v2.1.2-0.20220428194950-c836a7fe4d3b/go.mod h1:cG2Cd+0eYGSO2mbDbPunJwa61d5+yHEmerXQpQI1TD0=
 github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=
 github.com/gorilla/websocket v1.4.0/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
+github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG+4E0Y=
+github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
+github.com/muesli/go-app-paths v0.2.2 h1:NqG4EEZwNIhBq/pREgfBmgDmt3h1Smr1MjZiXbpZUnI=
+github.com/muesli/go-app-paths v0.2.2/go.mod h1:SxS3Umca63pcFcLtbjVb+J0oD7cl4ixQWoBKhGEtEho=
 github.com/shkh/lastfm-go v0.0.0-20191215035245-89a801c244e0 h1:cgqwZtnR+IQfUYDLJ3Kiy4aE+O/wExTzEIg8xwC4Qfs=
 github.com/shkh/lastfm-go v0.0.0-20191215035245-89a801c244e0/go.mod h1:n3nudMl178cEvD44PaopxH9jhJaQzthSxUzLO5iKMy4=
 golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16 h1:y6ce7gCWtnH+m3dCjzQ1PCuwl28DDIc3VNnvY29DlIA=

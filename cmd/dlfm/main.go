@@ -1,112 +1,65 @@
 package main
 
 import (
-	"github.com/BurntSushi/toml"
-	"github.com/shkh/lastfm-go/lastfm"
+	hlps "github.com/dikey0ficial/dlfm/v5/internal/helpers"
+	"github.com/dikey0ficial/dlfm/v5/internal/lib"
 
-	"fmt"
-	"io"
-	"io/ioutil"
 	"log"
 	"os"
-	"strconv"
-	"strings"
-	"time"
+)
+
+var (
+	app        lib.App
+	stdl, errl *log.Logger
 )
 
 func init() {
-	initConfig()
-}
+	stdl = log.New(os.Stdout, "", log.Ltime)
+	errl = log.New(os.Stderr, "[ERROR] ", log.Ltime|log.Lshortfile)
 
-func end(err error) {
-	if err != nil {
-		log.Println(err)
+	ParseFlags()
+
+	if flags.Help {
+		PrintUsage()
+		end(nil)
+		os.Exit(0)
 	}
-	fmt.Println("Press enter to close window...")
-	fmt.Scanln()
+
+	var confPath string
+
+	if flags.ConfigPath != "" {
+		if _, err := os.Stat(flags.ConfigPath); err != nil {
+			errl.Printf("Specified config doesn't exist")
+			end(nil)
+			os.Exit(1)
+		}
+
+		confPath = flags.ConfigPath
+	} else if path, err := hlps.GetConfigPath(); err != nil {
+		end(err)
+		os.Exit(1)
+	} else {
+		confPath = path
+	}
+
+	// unless it creates local app instead of using global
+	var err error
+
+	app, err = lib.NewApp(confPath, stdl, errl)
+
+	if err != nil {
+		errl.Printf("Error initializing (%v)\n", err)
+		end(nil)
+		os.Exit(1)
+	}
 }
 
 func main() {
-	api := lastfm.New(conf.LastFM.APIKey, "")
-
-	log.Println("Connected to last.fm")
-
-	if conf.App.EndlessMode {
-		log.Println("Endless mode! Press `Ctrl+C` to exit")
-	}
-
-	var (
-		indentificator string
-		updater        StatusUpdater
-	)
-
-	if conf.Discord.UseAppMode {
-		updater = AppStatusUpdater{}
-		indentificator = strconv.Itoa(conf.Discord.AppID)
-	} else {
-		updater = &TokenModeStatusUpdater{}
-		indentificator = conf.Discord.Token
-	}
-
-	if err := updater.Login(indentificator); err != nil {
-		end(err)
-		os.Exit(1)
-	}
-
-	defer func() { updater.Logout() }()
-	log.Println("Authorized and connected to discord")
-
-	interval := time.Duration(conf.LastFM.CheckInterval) * time.Second
-	ticker := time.NewTicker(interval)
-
-	var (
-		prevTrack string
-	)
-BIGFOR:
-	for {
-		select {
-		case <-ticker.C:
-			result, err := api.User.GetRecentTracks(lastfm.P{"limit": "1",
-				"user": conf.LastFM.Username})
-			if err != nil {
-				log.Println("last.fm error: ", err)
-				if !conf.App.EndlessMode {
-					end(nil)
-					return
-				}
-			} else {
-				if len(result.Tracks) > 0 {
-					ctrack := result.Tracks[0]
-					isNowPlaying, _ := strconv.ParseBool(ctrack.NowPlaying)
-					trackName := ctrack.Artist.Name + " - " + ctrack.Name
-					if isNowPlaying {
-						if err := updater.Set(result); err != nil {
-							if err.Error() == "The pipe is being closed." {
-								log.Println("Error: discord disconnected =(")
-								break BIGFOR
-							}
-							log.Println("Discord error: ", err)
-							if !conf.App.EndlessMode {
-								end(nil)
-								break
-							}
-						}
-						if prevTrack != trackName {
-							log.Println("Now playing: " + trackName)
-							prevTrack = trackName
-						}
-					} else if !isNowPlaying {
-						if err := updater.Clear(); err != nil {
-							log.Println("Discord error: ", err)
-							if !conf.App.EndlessMode {
-								end(nil)
-								break
-							}
-						}
-					}
-				}
-			}
-		}
+	code := 0
+	err := app.Run()
+	if err != nil {
+		errl.Printf("%v\n", err)
 	}
 	end(nil)
+	os.Exit(code)
 }
