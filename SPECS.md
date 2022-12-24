@@ -6,6 +6,7 @@ __(?) means that i doubt if it needed__
 
  - [ ] Taking track info from:
    - [x] last.fm
+   - [ ] listenbrainz
    - [ ] libre.fm
    - [ ] (?) yandex.music
    
@@ -24,5 +25,6 @@ __(?) means that i doubt if it needed__
 
  - [ ] UI:
    - [x] CLI
-   - [ ] GUI
+   - [ ] (?) GUI
+
 
