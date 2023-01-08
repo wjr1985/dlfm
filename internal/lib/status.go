@@ -60,6 +60,7 @@ func (a *AppStatusUpdater) Set(t RT) error {
 		&act.State,
 		&act.LargeImage,
 		&act.LargeText,
+		&act.SmallImage,
 		&act.SmallText,
 	} {
 		*v = replaceTags(

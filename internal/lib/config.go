@@ -69,10 +69,10 @@ var servicesTags = map[string]string{
 
 	// !!WARNING!!: I did't checked licenses of these icons
 
-	"lastfm":     "http://icons.iconarchive.com/icons/danleech/simple/512/LastFM-icon.png",
+	"lastfm":     "https://avatars.yandex.net/get-music-user-playlist/28719/105290895.103.28626/m1000x1000?1465363459368&webp=false",
 	"deezer":     "https://www.macupdate.com/images/icons512/60905.png",
 	"youtube":    "https://seeklogo.com/images/Y/youtube-music-logo-50422973B2-seeklogo.com.png",
-	"apple":      "http://ixd.prattsi.org/wp-content/uploads/2017/01/apple_music_logo_by_mattroxzworld-d982zrj.png",
+	"apple":      "https://logosmarken.com/wp-content/uploads/2020/11/Apple-Music-Zeichen.png",
 	"vk":         "https://seeklogo.com/images/V/vk-icon-logo-10188561D5-seeklogo.com.png",
 	"yandex":     "https://download.cdn.yandex.net/from/yandex.ru/support/ru/music/files/icon_main.png",
 	"soundcloud": "https://icons.iconarchive.com/icons/sicons/basic-round-social/512/soundcloud-icon.png",
