@@ -25,6 +25,6 @@ __(?) means that i doubt if it needed__
 
  - [ ] UI:
    - [x] CLI
-   - [ ] (?) GUI
+   - [ ] GUI
 
 

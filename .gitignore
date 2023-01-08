@@ -1,3 +1,7 @@
 /built/
 /vendor/
 /config.toml
+
+# vim swap files
+*.swp
+*.swo
