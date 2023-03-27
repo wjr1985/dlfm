@@ -3,12 +3,7 @@
  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language: Go](https://img.shields.io/static/v1?message=Go&labelColor=5c5c5c&color=00ADD8&label=Language "Go")](https://go.dev/ "Go")
 ## This app will update your Discord status with information about song that you scrobble now
 
-## !!WARNING!!: Project is archived and WILL NOT BE MAINTAINED
-I've deleted my Discord account (because of personal beliefs), so I cannot test it anymore
-
-If someone wants to fork this repo and maintain it — you're welcome! You can write on my 
-email `dikey0ficial [AT] disroot [DOT] org` and I'll add link to your fork to README/description
-
+## !!NOTE!!: This isn't an official fork
 
 ***
 
